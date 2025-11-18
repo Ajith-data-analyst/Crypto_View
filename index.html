@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto View</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="header-title">Crypto View</h1>
+                <h1 class="header-subtitle">Live Crypto Price Analytics</h1>
+            </div>
+            <div class="header-right">
+                <div class="current-time" id="currentTime">Fetching</div>
+                <div class="connection-status" id="connectionStatus">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Connecting...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="footer-wrap"></div>
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Crypto Selector -->
+        <section class="crypto-selector">
+            <button class="crypto-btn active" data-symbol="BTC" data-name="Bitcoin" data-icon="₿">
+                <span class="crypto-icon">₿</span>
+                <span class="crypto-name">BTC</span>
+            </button>
+            <button class="crypto-btn" data-symbol="ETH" data-name="Ethereum" data-icon="Ξ">
+                <span class="crypto-icon">Ξ</span>
+                <span class="crypto-name">ETH</span>
+            </button>
+            <button class="crypto-btn" data-symbol="ADA" data-name="Cardano" data-icon="₳">
+                <span class="crypto-icon">₳</span>
+                <span class="crypto-name">ADA</span>
+            </button>
+            <button class="crypto-btn" data-symbol="DOT" data-name="Polkadot" data-icon="●">
+                <span class="crypto-icon">●</span>
+                <span class="crypto-name">DOT</span>
+            </button>
+            <button class="crypto-btn" data-symbol="SOL" data-name="Solana" data-icon="◎">
+                <span class="crypto-icon">◎</span>
+                <span class="crypto-name">SOL</span>
+            </button>
+            <button class="crypto-btn" data-symbol="BNB" data-name="Binance Coin" data-icon="⬢">
+                <span class="crypto-icon">⬢</span>
+                <span class="crypto-name">BNB</span>
+            </button>
+            <button class="crypto-btn" data-symbol="XRP" data-name="Ripple" data-icon="✕">
+                <span class="crypto-icon">✕</span>
+                <span class="crypto-name">XRP</span>
+            </button>
+            <button class="crypto-btn" data-symbol="DOGE" data-name="Dogecoin" data-icon="Ð">
+                <span class="crypto-icon">Ð</span>
+                <span class="crypto-name">DOGE</span>
+            </button>
+
+            <button class="crypto-btn" data-symbol="LTC" data-name="Litecoin" data-icon="Ł">
+                <span class="crypto-icon">Ł</span>
+                <span class="crypto-name">LTC</span>
+            </button>
+        </section>
+
+        <!-- Current Price Card -->
+        <section class="price-card">
+            <div class="price-card-header">
+                <div class="price-crypto-info">
+                    <span class="price-crypto-icon" id="priceIcon">₿</span>
+                    <div>
+                        <h2 class="price-crypto-name" id="priceCryptoName">Bitcoin</h2>
+                        <span class="price-crypto-symbol" id="priceCryptoSymbol">BTC/USDT</span>
+                    </div>
+                </div>
+            </div>
+            <div class="price-card-body">
+                <div class="current-price-container">
+                    <span class="price-arrow" id="priceArrow">→</span>
+                    <div class="current-price" id="currentPrice">$--,---</div>
+                </div>
+                <div class="price-change" id="priceChange">
+                    <span class="change-value">+0.00%</span>
+                    <span class="change-amount">$0.00</span>
+                </div>
+            </div>
+            <div class="price-stats">
+                <div class="stat-item">
+                    <span class="stat-label">24h High</span>
+                    <span class="stat-value" id="high24h">$--,---</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">24h Low</span>
+                    <span class="stat-value" id="low24h">$--,---</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">24h Volume</span>
+                    <span class="stat-value" id="volume24h">--</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Market Microstructure Panel -->
+        <section class="panel">
+            <h3 class="panel-title">📊 Market Microstructure</h3>
+            <div class="microstructure-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Order Flow Imbalance</div>
+                    <div class="metric-value" id="ofiValue">--</div>
+                    <div class="metric-bar">
+                        <div class="metric-bar-fill" id="ofiBar"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Volume Slope</div>
+                    <div class="metric-value" id="volumeSlope">--</div>
+                    <div class="metric-bar">
+                        <div class="metric-bar-fill" id="volumeSlopeBar"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Bid-Ask Imbalance</div>
+                    <div class="metric-value" id="bidAskImbalance">--</div>
+                    <div class="metric-bar">
+                        <div class="metric-bar-fill" id="bidAskBar"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Volatility Metrics -->
+        <section class="panel">
+            <h3 class="panel-title">📈 Volatility Metrics</h3>
+            <div class="volatility-grid">
+                <div class="volatility-item">
+                    <div class="volatility-header">
+                        <span class="volatility-label">1h Volatility</span>
+                        <span class="volatility-value" id="vol1h">--%</span>
+                    </div>
+                    <div class="volatility-gauge">
+                        <div class="gauge-fill" id="vol1hGauge"></div>
+                    </div>
+                </div>
+                <div class="volatility-item">
+                    <div class="volatility-header">
+                        <span class="volatility-label">4h Volatility</span>
+                        <span class="volatility-value" id="vol4h">--%</span>
+                    </div>
+                    <div class="volatility-gauge">
+                        <div class="gauge-fill" id="vol4hGauge"></div>
+                    </div>
+                </div>
+                <div class="volatility-item">
+                    <div class="volatility-header">
+                        <span class="volatility-label">24h Volatility</span>
+                        <span class="volatility-value" id="vol24h">--%</span>
+                    </div>
+                    <div class="volatility-gauge">
+                        <div class="gauge-fill" id="vol24hGauge"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Anomaly Detection -->
+        <section class="panel">
+            <h3 class="panel-title">🔍 Anomaly Detection</h3>
+            <div class="anomaly-container" id="anomalyContainer">
+                <div class="anomaly-item status--info">
+                    <span class="anomaly-icon">ℹ️</span>
+                    <span class="anomaly-text">Monitoring market conditions...</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top Movers -->
+        <section class="panel">
+            <h3 class="panel-title">🚀 Top Movers (24h)</h3>
+            <div class="movers-container" id="moversContainer">
+                <div class="mover-item">Loading...</div>
+            </div>
+        </section>
+
+        <!-- Risk Indicators -->
+        <section class="panel">
+            <h3 class="panel-title">⚠️ Risk Indicators</h3>
+            <div class="risk-grid">
+                <div class="risk-card">
+                    <div class="risk-label">Market Risk</div>
+                    <div class="risk-value" id="marketRisk">Medium</div>
+                    <div class="risk-score" id="marketRiskScore">50%</div>
+                </div>
+                <div class="risk-card">
+                    <div class="risk-label">Liquidity Score</div>
+                    <div class="risk-value" id="liquidityScore">High</div>
+                    <div class="risk-score" id="liquidityScoreValue">85%</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alert Center -->
+        <section class="panel">
+            <h3 class="panel-title">🔔 Alert Center</h3>
+            <div class="alerts-container" id="alertsContainer">
+                <div class="alert-item status--info">
+                    <span class="alert-time">--:--</span>
+                    <span class="alert-message">System initialized</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Action Buttons -->
+    <div class="fab-container">
+        <button class="fab" id="themeToggle" title="Toggle Theme">
+            <span class="fab-icon">🌙</span>
+        </button>
+        <button class="fab" id="exportBtn" title="Export Data">
+            <span class="fab-icon">📥</span>
+        </button>
+        <button class="fab" id="searchBtn" title="Search">
+            <span class="fab-icon">🔍</span>
+        </button>
+    </div>
+
+    <!-- Search Panel -->
+    <div class="search-panel" id="searchPanel">
+        <div class="search-panel-header">
+            <h3>Cryto Search</h3>
+            <button class="close-btn" id="closeSearch">✕</button>
+        </div>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search cryptocurrencies and metrics...">
+        <div class="search-results" id="searchResults">
+            <div class="search-result-item">Start typing to search...</div>
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+
+        <div class="footer-content">
+            <div class="footer-item">
+                <span class="footer-label">Connection</span>
+                <span class="footer-value" id="footerConnection">Active</span>
+            </div>
+            <div class="footer-item">
+                <span class="footer-label">last refresh</span>
+                <span class="footer-value" id="dataFreshness">--s</span>
+            </div>
+            <div class="footer-item">
+                <span class="footer-label">Latency</span>
+                <span class="footer-value" id="latency">--ms</span>
+            </div>
+            <div class="footer-item">
+                <span class="footer-label">Data Points</span>
+                <span class="footer-value" id="dataPoints">0</span>
+            </div>
+            <div class="footer-item" id="footerLivePriceBox" style="display:none;">
+
+                <span class="footer-value" id="footerLivePrice" style="font-size:30px; font-weight:1500;">$--</span>
+            </div>
+
+    </footer>
+    </div>
+    <script src="app.js"></script>
+</body>
+<!-- Copyright Footer -->
+<!-- Copyright Footer -->
+<footer style="margin-top: var(--space-24); padding: var(--space-24); background: var(--color-surface); border-radius: var(--radius-lg); border: 1px solid var(--color-card-border); text-align: center;" role="contentinfo" aria-label="Footer information">
+
+    <!-- Top Grid Section -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-24); margin-bottom: var(--space-16);">
+
+        <!-- Domains & Technologies -->
+        <div>
+            <h4 style="font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); margin-bottom: var(--space-8); color: var(--color-text);">
+                Domains & Technologies
+            </h4>
+
+            <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                <span style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">⚡ FinTech & Crypto Markets</span>
+                <span style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">📈 Data Analytics & Visualization</span>
+                <span style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">🔌 Real-Time WebSocket Streaming</span>
+                <span style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">🌐 REST APIs (CoinGecko)</span>
+
+            </div>
+        </div>
+
+
+
+        <!-- APIs -->
+        <div>
+            <h4 style="font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); margin-bottom: var(--space-8); color: var(--color-text);">
+                APIs
+            </h4>
+
+            <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                <a href="https://www.binance.com/en/binance-api" style="font-size: var(--font-size-sm); color: var(--color-text-secondary); text-decoration: none;" target="_blank">Binance</a>
+                <a href="https://www.coingecko.com/en/api" style="font-size: var(--font-size-sm); color: var(--color-text-secondary); text-decoration: none;" target="_blank">CoinGecko</a>
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div>
+            <h4 style="font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); margin-bottom: var(--space-8); color: var(--color-text);">
+                Status
+            </h4>
+
+            <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Built with real-time market data</div>
+                <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Last updated: <span id="footerLastUpdate">Now</span></div>
+                <div style="font-size: var(--font-size-sm);">Status: <span id="footerStatus" style="color: var(--color-success); font-weight: var(--font-weight-bold);">Live</span></div>
+                <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Not financial advice</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="padding-top: var(--space-16); border-top: 1px solid var(--color-card-border-inner); padding-bottom: 0;">
+        <a href="https://github.com/Ajith-data-analyst/Crypto_View" style="font-size: var(--font-size-sm); color: var(--color-text-secondary); text-decoration: none; margin: 0; text-align: center; display: block;">
+        © 2025 Crypto View | All rights reserved | Live Crypto Price Analytics
+    </a>
+    </div>
+
+
+</footer>
+
+</html>
