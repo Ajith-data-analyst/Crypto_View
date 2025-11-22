@@ -183,30 +183,51 @@
             </div>
         </section>
 
-        <!-- Top Movers -->
-        <section class="panel">
-            <h3 class="panel-title">🚀 Top Movers (24h)</h3>
-            <div class="movers-container" id="moversContainer">
-                <div class="mover-item">Loading...</div>
-            </div>
-        </section>
+        <!-- New Two-Column Layout -->
+        <div class="stats-grid">
 
-        <!-- Risk Indicators -->
-        <section class="panel">
-            <h3 class="panel-title">⚠️ Risk Indicators</h3>
-            <div class="risk-grid">
-                <div class="risk-card">
-                    <div class="risk-label">Market Risk</div>
-                    <div class="risk-value" id="marketRisk">Medium</div>
-                    <div class="risk-score" id="marketRiskScore">50%</div>
-                </div>
-                <div class="risk-card">
-                    <div class="risk-label">Liquidity Score</div>
-                    <div class="risk-value" id="liquidityScore">High</div>
-                    <div class="risk-score" id="liquidityScoreValue">85%</div>
-                </div>
+            <!-- LEFT: TOP MOVERS -->
+            <div class="stats-card">
+                <h3>Top Movers</h3>
+                <div id="top-movers"></div>
             </div>
-        </section>
+
+            <!-- RIGHT: RISK INDICATORS -->
+            <div class="stats-card">
+                <h3>Risk Indicators</h3>
+
+                <div class="risk-item">
+                    <span>Volatility</span>
+                    <div class="risk-bar">
+                        <div id="bar-volatility"></div>
+                    </div>
+                </div>
+
+                <div class="risk-item">
+                    <span>Whale Activity</span>
+                    <div class="risk-bar">
+                        <div id="bar-whale"></div>
+                    </div>
+                </div>
+
+                <div class="risk-item">
+                    <span>Unusual Volume</span>
+                    <div class="risk-bar">
+                        <div id="bar-volume"></div>
+                    </div>
+                </div>
+
+                <div class="risk-item">
+                    <span>Price Deviation</span>
+                    <div class="risk-bar">
+                        <div id="bar-deviation"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
 
         <!-- Alert Center -->
         <section class="panel">
@@ -231,6 +252,7 @@
         <button class="fab" id="searchBtn" title="Search">
             <span class="fab-icon">🔍</span>
         </button>
+
     </div>
 
     <!-- Search Panel -->

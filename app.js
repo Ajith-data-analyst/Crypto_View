@@ -360,43 +360,39 @@ function updateVolatilityMetrics(data) {
     if (vol24hGaugeEl) vol24hGaugeEl.style.width = `${Math.min(volatility24h * 10, 100)}%`;
 }
 
+function updateRiskBars(values) {
+    // values = { volatility: %, whale: %, volume: %, deviation: % }
+
+    document.getElementById("bar-volatility").style.width = values.volatility + "%";
+    document.getElementById("bar-whale").style.width = values.whale + "%";
+    document.getElementById("bar-volume").style.width = values.volume + "%";
+    document.getElementById("bar-deviation").style.width = values.deviation + "%";
+}
+
 // Update risk indicators
 function updateRiskIndicators(data) {
     if (!data) return;
+
+    // --- Volatility Calculation ---
     const volatility = ((data.high24h - data.low24h) / (data.price || 1)) * 100;
+    const volatilityScore = Math.min(volatility, 100); // cap at 100
 
-    let riskLevel, riskScore;
-    if (volatility < 3) {
-        riskLevel = 'Low';
-        riskScore = 25;
-    } else if (volatility < 7) {
-        riskLevel = 'Medium';
-        riskScore = 50;
-    } else {
-        riskLevel = 'High';
-        riskScore = 75;
-    }
-
-    const marketRiskEl = document.getElementById('marketRisk');
-    const marketRiskScoreEl = document.getElementById('marketRiskScore');
-    if (marketRiskEl) marketRiskEl.textContent = riskLevel;
-    if (marketRiskScoreEl) marketRiskScoreEl.textContent = `${riskScore}%`;
-
+    // --- Liquidity Score ---
     const liquidityScore = Math.min((data.volume24h / 1000000) * 10, 100);
-    const liquidityScoreEl = document.getElementById('liquidityScore');
-    const liquidityScoreValueEl = document.getElementById('liquidityScoreValue');
-    let liquidityLevel;
-    if (liquidityScore > 70) {
-        liquidityLevel = 'High';
-    } else if (liquidityScore > 40) {
-        liquidityLevel = 'Medium';
-    } else {
-        liquidityLevel = 'Low';
-    }
 
-    if (liquidityScoreEl) liquidityScoreEl.textContent = liquidityLevel;
-    if (liquidityScoreValueEl) liquidityScoreValueEl.textContent = `${liquidityScore.toFixed(0)}%`;
+    // --- Extra risk metrics you may add later ---
+    const whaleActivity = Math.min((data.volume24h / data.price) % 100, 100);
+    const deviation = Math.min(Math.abs((data.price - data.low24h) / data.price) * 100, 100);
+
+    // --- UPDATE NEW BAR GRAPH ---
+    updateRiskBars({
+        volatility: volatilityScore,
+        whale: whaleActivity,
+        volume: liquidityScore,
+        deviation: deviation
+    });
 }
+
 // Robust watcher: show footer price when >1/3 of .price-card is hidden
 function setupPriceVisibilityWatcher() {
     const priceCard = document.querySelector('.price-card');
@@ -519,7 +515,7 @@ function updateTopMovers() {
         .sort((a, b) => Math.abs(b.change) - Math.abs(a.change))
         .slice(0, 5);
 
-    const container = document.getElementById('moversContainer');
+    const container = document.getElementById('top-movers');
     if (!container) return;
 
     container.innerHTML = movers.map(mover => `
